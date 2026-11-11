@@ -1,5 +1,10 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.7.0 · 11/11/2026
+- Plazas sincronizadas con tecnica-estructural.com (API Hermes) cada hora y comprobadas justo antes de cobrar. Se usa la cifra más baja entre las plazas de la entrada y la capacidad del evento, menos nuestras ventas aún no enviadas. "Completo" / "¡Últimas N plazas!".
+- Los productos se llaman "Formaciones" en el escritorio y viven en /formacion/ (301 desde /producto/).
+- La API Key pasa a wp-config.php (constante GV_HERMES_API_KEY).
+
 ## 0.6.0 · 11/11/2026
 - Se retiran las pestañas de ficha generadas por código (0.5.0): las fichas pasan a hacerse con Elementor para que el equipo las edite sin depender de nadie.
 

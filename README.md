@@ -18,7 +18,7 @@ Todas en Webempresa (misma cuenta de hosting), WordPress + Elementor Pro.
 ## Qué hay aquí
 
 ```
-academia/plugins/gemmavila-academia/   Plugin propio de la academia
+academia/plugins/gemmavila-academia/   Plugin propio de la academia (includes/ = una función por archivo)
 docs/mapa-tecnico.md                   Mapa técnico, decisiones y pendientes
 CHANGELOG.md                           Qué ha cambiado en cada versión
 ```
@@ -39,6 +39,8 @@ Se instala en `wp-content/plugins/gemmavila-academia/` de la academia. Hace, en 
 - **Compra directa.** No hay carrito a la vista: al pulsar "Inscribirme" se vacía el carrito, se añade ese curso y se va directo al pago. La página del carrito redirige al pago (o a la home si está vacío).
 - **Enlaces antiguos.** Los enlaces `?add-to-cart=<ID>` de la web principal se traducen al producto equivalente de la academia (mapa en la opción `gv_mapa_productos_web_principal`).
 - **SEO.** Solo la home de la academia se indexa en Google; el mapa del sitio solo incluye la home.
+- **Formaciones, no productos.** En el escritorio el menú se llama "Formaciones" y las fichas están en `/formacion/<curso>/`; las direcciones antiguas `/producto/...` redirigen solas. (`includes/formaciones.php`)
+- **Plazas sincronizadas con Técnica Estructural.** Cada hora se consultan las plazas libres de cada formación en su API y se ponen como existencias; justo antes de cobrar se vuelve a comprobar. Mientras no se aclare qué dato manda, se usa la cifra más baja entre las plazas de la entrada y la capacidad del evento. Si se agota: "Completo"; si quedan 5 o menos: "¡Últimas N plazas!". Si la API no responde, no se bloquea la venta. Necesita la constante `GV_HERMES_API_KEY` en `wp-config.php`. (`includes/plazas.php`)
 - **Cursos con fecha.** Cada curso guarda su fecha de inicio en el campo `_gv_fecha_inicio` (AAAA-MM-DD). Desde ese día no se puede comprar, y cada noche a las 00:05 (hora de Madrid) los cursos empezados se ocultan del catálogo. No se borra nada.
 
 Lo que **no** está en el plugin (se gestiona desde WordPress/Elementor):
