@@ -1,5 +1,8 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.9.2 · 11/11/2026
+- NIF desactivado temporalmente para diagnosticar el 403 en el pago.
+
 ## 0.9.1 · 11/11/2026
 - Pago sin el recuadro "Notas del pedido".
 
