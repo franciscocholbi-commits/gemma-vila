@@ -1,0 +1,47 @@
+# Gemma Vila · código y documentación técnica
+
+Repositorio privado del proyecto técnico de Gemma Vila (Gemma Vila Acción). Aquí vive todo el código propio que corre en sus webs y la documentación para que cualquiera pueda entenderlo y mantenerlo.
+
+Responsable técnico: Francisco Cholbi.
+
+## Webs
+
+| Web | Papel |
+|---|---|
+| gemmavilaaccion.es | Marca de Gemma, captación |
+| tecnicaestructural.es | Captación Técnica Estructural |
+| lecturadeaura.es | Captación Lectura del Aura (en construcción) |
+| academia.gemmavilaaccion.es | Única tienda + academia (WooCommerce) |
+
+Todas en Webempresa (misma cuenta de hosting), WordPress + Elementor Pro.
+
+## Qué hay aquí
+
+```
+academia/plugins/gemmavila-academia/   Plugin propio de la academia
+docs/mapa-tecnico.md                   Mapa técnico, decisiones y pendientes
+CHANGELOG.md                           Qué ha cambiado en cada versión
+```
+
+## Reglas de trabajo
+
+1. **Lo que hay en la web es lo que hay aquí.** No se toca código en el servidor sin que el cambio esté antes en este repositorio.
+2. **Cada cambio, con su explicación** en el mensaje del commit y en `CHANGELOG.md`.
+3. **Nunca se suben contraseñas ni claves** (la API Key de Técnica Estructural va en `wp-config.php` del servidor, no aquí).
+4. Antes de desplegar se guarda una copia del archivo en el servidor (`.bak-<versión>`).
+
+## Plugin `gemmavila-academia`
+
+Se instala en `wp-content/plugins/gemmavila-academia/` de la academia. Hace, en lenguaje normal:
+
+- **Menús por tipo de usuario.** La cabecera siempre usa el menú `academia-publico`; si entra un alumno se cambia por `academia-alumno`, y si entra alguien del equipo (permiso de gestionar la tienda) por `academia-gestion`. El elemento de menú con la clase `gv-logout` cierra sesión de verdad.
+- **Mi cuenta** sin la sección de Descargas.
+- **Compra directa.** No hay carrito a la vista: al pulsar "Inscribirme" se vacía el carrito, se añade ese curso y se va directo al pago. La página del carrito redirige al pago (o a la home si está vacío).
+- **Enlaces antiguos.** Los enlaces `?add-to-cart=<ID>` de la web principal se traducen al producto equivalente de la academia (mapa en la opción `gv_mapa_productos_web_principal`).
+- **SEO.** Solo la home de la academia se indexa en Google; el mapa del sitio solo incluye la home.
+- **Cursos con fecha.** Cada curso guarda su fecha de inicio en el campo `_gv_fecha_inicio` (AAAA-MM-DD). Desde ese día no se puede comprar, y cada noche a las 00:05 (hora de Madrid) los cursos empezados se ocultan del catálogo. No se borra nada.
+
+Lo que **no** está en el plugin (se gestiona desde WordPress/Elementor):
+
+- Fichas de curso: plantilla Elementor "Ficha de producto academia" + contenido Elementor de cada producto (datos de la edición y pestañas). Para un curso nuevo se duplica uno existente y se cambian fechas y lugar.
+- Ajustes de WooCommerce, correos, Stripe y textos legales.
