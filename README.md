@@ -19,6 +19,7 @@ Todas en Webempresa (misma cuenta de hosting), WordPress + Elementor Pro.
 
 ```
 academia/plugins/gemmavila-academia/   Plugin propio de la academia (includes/ = una función por archivo)
+academia/entorno-pruebas/              mu-plugin que aísla la copia de pruebas
 docs/mapa-tecnico.md                   Mapa técnico, decisiones y pendientes
 CHANGELOG.md                           Qué ha cambiado en cada versión
 ```
@@ -49,3 +50,14 @@ Lo que **no** está en el plugin (se gestiona desde WordPress/Elementor):
 
 - Fichas de curso: plantilla Elementor "Ficha de producto academia" + contenido Elementor de cada producto (datos de la edición y pestañas). Para un curso nuevo se duplica uno existente y se cambian fechas y lugar.
 - Ajustes de WooCommerce, correos, Stripe y textos legales.
+
+## Entorno de pruebas
+
+`https://pruebas-academia.gemmavilaaccion.es` es una copia de la academia para probar antes de tocar producción.
+
+- **Misma base de datos, tablas propias** (prefijo `pa_` en lugar de `wp_`): no comparte pedidos, usuarios ni ajustes con producción.
+- `wp-config.php` de la copia define `GV_ENTORNO_PRUEBAS`, `WP_ENVIRONMENT_TYPE=staging`, `DISABLE_WP_CRON` y **no** tiene la clave de Hermes (nunca matricula a nadie en Técnica Estructural).
+- El mu-plugin `academia/entorno-pruebas/gv-entorno-pruebas.php` (solo actúa si existe `GV_ENTORNO_PRUEBAS`): acceso solo con sesión iniciada o enlace con clave (`GV_PRUEBAS_TOKEN`, solo en el wp-config de la copia), todos los correos desviados a Francisco con "[PRUEBAS]" en el asunto, noindex, Stripe forzado a modo pruebas y franja rosa "ENTORNO DE PRUEBAS".
+- Sin Magic Caché.
+
+**Flujo:** cambio en GitHub → se despliega en pruebas → se prueba → se despliega en producción (con copia `.bak` y comprobación md5).
