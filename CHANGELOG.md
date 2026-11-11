@@ -1,5 +1,9 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.8.0 · 11/11/2026
+- Plazas a la vista: en catálogo y ficha solo se muestra el número cuando quedan 10 o menos ("Quedan N plazas", "¡Últimas N plazas!", "Completo").
+- Escritorio: columna "Plazas" en el listado de Formaciones (con hora de sincronización) y recuadro en cada formación con botón "Sincronizar ahora".
+
 ## 0.7.0 · 11/11/2026
 - Plazas sincronizadas con tecnica-estructural.com (API Hermes) cada hora y comprobadas justo antes de cobrar. Se usa la cifra más baja entre las plazas de la entrada y la capacidad del evento, menos nuestras ventas aún no enviadas. "Completo" / "¡Últimas N plazas!".
 - Los productos se llaman "Formaciones" en el escritorio y viven en /formacion/ (301 desde /producto/).

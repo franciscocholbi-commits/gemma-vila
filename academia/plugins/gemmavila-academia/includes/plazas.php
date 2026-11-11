@@ -149,20 +149,7 @@ add_action( 'woocommerce_after_checkout_validation', function ( $data, $errors )
 	}
 }, 10, 2 );
 
-// Textos: "Completo" en lugar de "Sin existencias"; aviso solo cuando quedan pocas plazas.
-add_filter( 'woocommerce_get_availability_text', function ( $text, $product ) {
-	if ( ! get_post_meta( $product->get_id(), 'amelia_event_id', true ) ) {
-		return $text;
-	}
-	if ( ! $product->is_in_stock() ) {
-		return 'Completo';
-	}
-	$n = $product->get_stock_quantity();
-	if ( null !== $n && $n <= 5 ) {
-		return 1 === (int) $n ? '¡Última plaza!' : sprintf( '¡Últimas %d plazas!', $n );
-	}
-	return '';
-}, 10, 2 );
+// Los textos de plazas (Completo / Quedan N) están en includes/plazas-visibles.php.
 
 register_deactivation_hook( dirname( __DIR__ ) . '/gemmavila-academia.php', function () {
 	wp_clear_scheduled_hook( 'gv_sincronizar_plazas' );
