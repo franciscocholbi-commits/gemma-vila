@@ -1,5 +1,8 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.9.1 · 11/11/2026
+- Pago sin el recuadro "Notas del pedido".
+
 ## 0.9.0 · 11/11/2026
 - Campo obligatorio "NIF / DNI / NIE" en el pago y en Mi cuenta (necesario para la factura completa: los cursos superan 400 €). En España se valida formato y letra (DNI, NIE y CIF); fuera de España se acepta el documento. Se muestra en la dirección de facturación del pedido, correos y escritorio.
 

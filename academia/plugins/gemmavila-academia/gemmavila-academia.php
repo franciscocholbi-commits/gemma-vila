@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Gemma Vila Academia
  * Description: Funciones propias de la academia: menú según tipo de usuario (público, alumno, gestión) y ajustes de Mi cuenta. Aquí irá también la integración con Hermes.
- * Version: 0.9.0
+ * Version: 0.9.1
  * Author: Francisco Cholbi
  * Requires Plugins: woocommerce
  */
@@ -97,6 +97,9 @@ add_action( 'template_redirect', function () {
 
 // En el pago, sin enlaces de "volver al carrito" ni de editar cantidades.
 add_filter( 'woocommerce_checkout_cart_item_quantity', '__return_empty_string' );
+
+// En el pago, sin el recuadro "Notas del pedido" (texto de tienda online: aquí no hay entregas).
+add_filter( 'woocommerce_enable_order_notes_field', '__return_false' );
 
 /**
  * Enlaces antiguos de la web principal (?add-to-cart=<ID antiguo>): se traducen al producto equivalente de la academia.
