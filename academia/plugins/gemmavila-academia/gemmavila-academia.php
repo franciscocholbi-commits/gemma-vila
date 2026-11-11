@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Gemma Vila Academia
  * Description: Funciones propias de la academia: menú según tipo de usuario (público, alumno, gestión) y ajustes de Mi cuenta. Aquí irá también la integración con Hermes.
- * Version: 0.8.0
+ * Version: 0.9.0
  * Author: Francisco Cholbi
  * Requires Plugins: woocommerce
  */
@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/includes/formaciones.php';
 require_once __DIR__ . '/includes/plazas.php';
 require_once __DIR__ . '/includes/plazas-visibles.php';
+require_once __DIR__ . '/includes/nif.php';
 
 /**
  * La cabecera usa siempre el menú "academia-publico".

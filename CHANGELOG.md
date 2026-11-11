@@ -1,5 +1,8 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.9.0 · 11/11/2026
+- Campo obligatorio "NIF / DNI / NIE" en el pago y en Mi cuenta (necesario para la factura completa: los cursos superan 400 €). En España se valida formato y letra (DNI, NIE y CIF); fuera de España se acepta el documento. Se muestra en la dirección de facturación del pedido, correos y escritorio.
+
 ## 0.8.0 · 11/11/2026
 - Plazas a la vista: en catálogo y ficha solo se muestra el número cuando quedan 10 o menos ("Quedan N plazas", "¡Últimas N plazas!", "Completo").
 - Escritorio: columna "Plazas" en el listado de Formaciones (con hora de sincronización) y recuadro en cada formación con botón "Sincronizar ahora".
