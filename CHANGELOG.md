@@ -1,7 +1,7 @@
 # Changelog · plugin gemmavila-academia
 
 ## 0.10.0 · 12/11/2026
-- Origen de cada venta (`includes/origen.php`): los enlaces de compra pueden llevar `?origen=<marca>` y UTM; se guardan en la sesión de compra (sin cookies nuevas) y pasan al pedido (`_gv_origen`, `_gv_origen_web`, `_gv_utm_*`). Columna "Origen" en Pedidos, recuadro en cada pedido y línea en el correo "Nuevo pedido" del equipo. Sin marca, se guarda al menos la web de procedencia.
+- Origen de cada venta (`includes/origen.php`): los enlaces de compra pueden llevar `?origen=<marca>` y UTM; se guardan en la sesión de compra (sin cookies nuevas) y pasan al pedido (`_gv_origen`, `_gv_origen_web`, `_gv_utm_*`). Columna "Landing / campaña" en Pedidos (WooCommerce ya tiene su propia columna "Origen", basada en cookies), recuadro en cada pedido y línea en el correo "Nuevo pedido" del equipo. Sin marca, se guarda al menos la web de procedencia.
 
 ## 0.9.2 · 11/11/2026
 - NIF desactivado temporalmente para diagnosticar el 403 en el pago.
