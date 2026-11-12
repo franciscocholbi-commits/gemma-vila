@@ -120,17 +120,18 @@ function gv_origen_texto( $order ) {
 	return implode( ' · ', $partes );
 }
 
-/* ---------- Escritorio: columna "Origen" en Pedidos (HPOS y modo antiguo) ---------- */
+/* ---------- Escritorio: columna "Landing / campaña" en Pedidos (HPOS y modo antiguo).
+   WooCommerce ya tiene su propia columna "Origen" (atribución por cookies); esta es la nuestra, sin cookies. ---------- */
 $gv_origen_columna = function ( $columnas ) {
 	$nuevas = array();
 	foreach ( $columnas as $clave => $titulo ) {
 		$nuevas[ $clave ] = $titulo;
 		if ( 'order_status' === $clave ) {
-			$nuevas['gv_origen'] = __( 'Origen', 'gemmavila-academia' );
+			$nuevas['gv_origen'] = __( 'Landing / campaña', 'gemmavila-academia' );
 		}
 	}
 	if ( ! isset( $nuevas['gv_origen'] ) ) {
-		$nuevas['gv_origen'] = __( 'Origen', 'gemmavila-academia' );
+		$nuevas['gv_origen'] = __( 'Landing / campaña', 'gemmavila-academia' );
 	}
 	return $nuevas;
 };
