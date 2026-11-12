@@ -1,5 +1,8 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.11.0 · 12/11/2026
+- Datos para el cuadro de mando (`includes/datos.php`): listados CSV `/wp-json/gv/v1/datos/ventas` (una fila por pedido) y `/wp-json/gv/v1/datos/ediciones` (una fila por formación), protegidos con la clave de la opción `gv_datos_clave`. Sin datos personales. Los pedidos de prueba se marcan con la meta `_gv_pedido_prueba`.
+
 ## 0.10.0 · 12/11/2026
 - Origen de cada venta (`includes/origen.php`): los enlaces de compra pueden llevar `?origen=<marca>` y UTM; se guardan en la sesión de compra (sin cookies nuevas) y pasan al pedido (`_gv_origen`, `_gv_origen_web`, `_gv_utm_*`). Columna "Landing / campaña" en Pedidos (WooCommerce ya tiene su propia columna "Origen", basada en cookies), recuadro en cada pedido y línea en el correo "Nuevo pedido" del equipo. Sin marca, se guarda al menos la web de procedencia.
 
