@@ -81,10 +81,13 @@ function gv_datos_tipo( $product ) {
 
 /** Módulo (M1, M2…) a partir del nombre. */
 function gv_datos_modulo( $nombre ) {
+	if ( stripos( $nombre, 'pack' ) !== false ) {
+		return 'Pack';
+	}
 	if ( preg_match( '/m[oó]dulo\s*(\d+)/iu', $nombre, $m ) ) {
 		return 'M' . $m[1];
 	}
-	return stripos( $nombre, 'pack' ) !== false ? 'Pack' : '';
+	return '';
 }
 
 /** Listado de ventas: una fila por pedido. */
