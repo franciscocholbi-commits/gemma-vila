@@ -1,5 +1,8 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.12.0 · 12/11/2026
+- Pago por transferencia (`includes/transferencia.php`): los pedidos por transferencia bancaria quedan "En espera" ocupando plaza; a los 2 días sin pago se envía a la alumna un recordatorio con los datos bancarios y a los 3 días el pedido se cancela solo (se libera la plaza y se avisa a la alumna). Tarea programada cada hora (`gv_transferencia_revisar`). Plazos ajustables con los filtros `gv_transferencia_dias_aviso` y `gv_transferencia_dias_cancelar`.
+
 ## 0.11.0 · 12/11/2026
 - Datos para el cuadro de mando (`includes/datos.php`): listados CSV `/wp-json/gv/v1/datos/ventas` (una fila por pedido) y `/wp-json/gv/v1/datos/ediciones` (una fila por formación), protegidos con la clave de la opción `gv_datos_clave`. Sin datos personales. Los pedidos de prueba se marcan con la meta `_gv_pedido_prueba`.
 
