@@ -78,6 +78,9 @@ add_filter( 'woocommerce_billing_fields', function ( $fields ) {
 
 // Comprobación en el pago.
 add_action( 'woocommerce_after_checkout_validation', function ( $data, $errors ) {
+	if ( '' === gv_nif_normalizar( $data['billing_nif'] ?? '' ) ) {
+		return; // Vacío: ya lo avisa WooCommerce como campo obligatorio (evita el mensaje duplicado).
+	}
 	$e = gv_nif_error( $data['billing_nif'] ?? '', $data['billing_country'] ?? 'ES' );
 	if ( $e ) {
 		$errors->add( 'billing_nif', $e );

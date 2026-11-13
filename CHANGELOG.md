@@ -2,6 +2,7 @@
 
 ## 0.13.0 · 13/11/2026
 - NIF / DNI / NIE obligatorio reactivado en el pago (`includes/nif.php`). El 403 del 11/11 era el cortafuegos de Webempresa, no este módulo. Paso previo a emitir las facturas desde la tienda. Se prueba primero en el entorno de pruebas.
+- Si el NIF está vacío solo sale el aviso de campo obligatorio de WooCommerce (antes salían dos mensajes).
 
 ## 0.12.0 · 12/11/2026
 - Pago por transferencia (`includes/transferencia.php`): los pedidos por transferencia bancaria quedan "En espera" ocupando plaza; a los 2 días sin pago se envía a la alumna un recordatorio con los datos bancarios y a los 3 días el pedido se cancela solo (se libera la plaza y se avisa a la alumna). Tarea programada cada hora (`gv_transferencia_revisar`). Plazos ajustables con los filtros `gv_transferencia_dias_aviso` y `gv_transferencia_dias_cancelar`.
