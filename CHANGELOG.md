@@ -4,6 +4,7 @@
 - Matrículas en tecnica-estructural.com (`includes/matriculas.php`): al quedar pagado un pedido (Procesando o Completado) se envía `POST /bookings` por cada formación con `amelia_event_id` (nombre, apellidos, email, teléfono, DNI en `custom_fields`, entrada si la hay, `external_order_id` = WC-número, sin notificaciones de su lado). Guarda el `booking_id` en la línea del pedido y deja nota.
 - 409 (ya matriculada) y otros rechazos 4xx: no se reintenta; nota y correo al equipo (destinatarios de «Nuevo pedido»). Errores temporales (sin conexión, 429, 5xx): 3 reintentos a 1, 5 y 30 minutos con Action Scheduler; después, correo al equipo.
 - Acción manual en el pedido: «Enviar matrícula a Técnica Estructural».
+- La API real pide `customer.first_name` / `last_name` (su OpenAPI 1.7.11 dice `firstName`/`lastName`) y devuelve los errores de validación con HTTP 500 y código `validation_error`: se tratan como rechazo, no como error temporal.
 - Constante opcional `GV_HERMES_EVENTOS_PERMITIDOS` en wp-config para limitar los eventos (en pruebas: solo el curso de prueba 1052).
 
 ## 0.13.0 · 13/11/2026

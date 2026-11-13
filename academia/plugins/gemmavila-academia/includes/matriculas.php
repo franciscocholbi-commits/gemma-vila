@@ -71,8 +71,8 @@ function gv_matricula_enviar_pedido( $order_id, $intento = 0 ) {
 		$body = array(
 			'event_id' => $event,
 			'customer' => array(
-				'firstName'     => $order->get_billing_first_name(),
-				'lastName'      => $order->get_billing_last_name(),
+				'first_name'    => $order->get_billing_first_name(), // La API real usa snake_case (su OpenAPI dice firstName/lastName).
+				'last_name'     => $order->get_billing_last_name(),
 				'email'         => $order->get_billing_email(),
 				'phone'         => $order->get_billing_phone(),
 				'custom_fields' => array_filter( array( 'dni' => $order->get_meta( '_billing_nif' ) ) ),
@@ -106,7 +106,7 @@ function gv_matricula_enviar_pedido( $order_id, $intento = 0 ) {
 			$texto = sprintf( 'La alumna ya estaba matriculada en el evento %d («%s»). Técnica Estructural respondió: %s %s', $event, $item->get_name(), $cod, $msg );
 			$order->add_order_note( 'Matrícula NO enviada. ' . $texto );
 			gv_matricula_avisar_equipo( $order, $texto );
-		} elseif ( 0 === $code || 429 === $code || $code >= 500 ) {
+		} elseif ( 0 === $code || 429 === $code || ( $code >= 500 && 'validation_error' !== $cod ) ) {
 			$reintentar = true;
 			$order->add_order_note( sprintf( 'Error temporal al enviar la matrícula de «%s» (HTTP %d %s %s). Reintento %d de 3.', $item->get_name(), $code, $cod, $msg, $intento + 1 ) );
 		} else {
