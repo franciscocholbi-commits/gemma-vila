@@ -61,7 +61,7 @@ function gv_matricula_enviar_pedido( $order_id, $intento = 0 ) {
 	foreach ( $order->get_items() as $item ) {
 		$pid   = $item->get_product_id();
 		$event = (int) get_post_meta( $pid, 'amelia_event_id', true );
-		if ( ! $event || $item->get_meta( '_gv_hermes_booking_id' ) || in_array( $item->get_meta( '_gv_hermes_estado' ), array( 'duplicado', 'rechazado' ), true ) ) {
+		if ( ! $event || $item->get_meta( '_gv_hermes_booking_id' ) || in_array( $item->get_meta( '_gv_hermes_estado' ), array( 'enviado', 'duplicado', 'rechazado' ), true ) ) {
 			continue;
 		}
 		if ( ! gv_hermes_evento_permitido( $event ) ) {
@@ -99,7 +99,7 @@ function gv_matricula_enviar_pedido( $order_id, $intento = 0 ) {
 			$item->update_meta_data( '_gv_hermes_booking_id', $bid );
 			$item->update_meta_data( '_gv_hermes_estado', 'enviado' );
 			$item->save();
-			$order->add_order_note( sprintf( 'Matrícula enviada a Técnica Estructural: «%s», evento %d, reserva %s.', $item->get_name(), $event, $bid ) );
+			$order->add_order_note( sprintf( 'Matrícula enviada a Técnica Estructural: «%s», evento %d, reserva %s.', $item->get_name(), $event, $bid ? $bid : '(la API no devolvió número de reserva)' ) );
 		} elseif ( 409 === $code ) {
 			$item->update_meta_data( '_gv_hermes_estado', 'duplicado' );
 			$item->save();
