@@ -1,5 +1,10 @@
 # Changelog · plugin gemmavila-academia
 
+## mu-plugin gv-iva-facturas 1.0.0 · 18/11/2026 (producción)
+- Facturas con el sistema interno (PDF Invoices & Packing Slips) en la academia real. Decisión de Francisco: España y UE con 21 % de IVA incluido; fuera de la UE, factura sin IVA por el **mismo importe final** (no el reducido).
+- `academia/mu-plugins/gv-iva-facturas.php`: `woocommerce_adjust_non_base_location_prices` = false (mismo precio en todos los países), la factura PDF muestra base + IVA desglosados (la web sigue mostrando precios con IVA incluido) y una nota de «Operación no sujeta al IVA español» cuando el cliente es de fuera de la UE y el pedido va sin IVA.
+- Ajustes de WooCommerce (no son código): impuestos según la dirección de facturación; tasa «IVA 21%» para España y los 26 países restantes de la UE; sin tasa para el resto del mundo.
+
 ## 0.14.0 · 13/11/2026 (solo en pruebas hasta validarlo con David)
 - Matrículas en tecnica-estructural.com (`includes/matriculas.php`): al quedar pagado un pedido (Procesando o Completado) se envía `POST /bookings` por cada formación con `amelia_event_id` (nombre, apellidos, email, teléfono, DNI en `custom_fields`, entrada si la hay, `external_order_id` = WC-número, sin notificaciones de su lado). Guarda el `booking_id` en la línea del pedido y deja nota.
 - 409 (ya matriculada) y otros rechazos 4xx: no se reintenta; nota y correo al equipo (destinatarios de «Nuevo pedido»). Errores temporales (sin conexión, 429, 5xx): 3 reintentos a 1, 5 y 30 minutos con Action Scheduler; después, correo al equipo.
