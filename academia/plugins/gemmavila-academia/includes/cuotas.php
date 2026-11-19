@@ -289,3 +289,30 @@ add_action( 'wp_head', function () {
 		echo '<style>#order_review tr.recurring-totals,#order_review tr.cart-subtotal.recurring-total{display:none}</style>';
 	}
 } );
+
+/*
+ * Ficha de la formación: la opción de cuotas que añade el plugin («Pagar en cuotas de 225 € / mes durante 2 meses»)
+ * salía con el tamaño del precio grande del tema. Se deja al tamaño del texto y con el mismo texto que en el pago:
+ * «En 2 cuotas mensuales de 225 €».
+ */
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+		return;
+	}
+	$plan = gv_plan_cuotas( get_the_ID() );
+	if ( ! $plan ) {
+		return;
+	}
+	$texto = sprintf( 'En %d cuotas mensuales de %s', $plan['cuotas'], gv_importe_corto( $plan['importe'] ) );
+	?>
+	<style>
+		.wcsatt-options-prompt-radios{list-style:none;margin:0 0 1em;padding:0}
+		.wcsatt-options-prompt-action,.wcsatt-options-prompt-action *{font-size:inherit!important;font-family:inherit!important;line-height:inherit!important;color:inherit!important}
+	</style>
+	<script>
+		document.querySelectorAll( '.wcsatt-options-prompt-label-subscription .wcsatt-options-prompt-action' ).forEach( function ( el ) {
+			el.textContent = <?php echo wp_json_encode( $texto ); ?>;
+		} );
+	</script>
+	<?php
+}, 99 );
