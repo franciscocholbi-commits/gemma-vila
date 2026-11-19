@@ -42,6 +42,9 @@ function gv_ventas_pendientes_de_enviar( $product_id ) {
 	) );
 	$n = 0;
 	foreach ( $orders as $o ) {
+		if ( function_exists( 'gv_es_cuota_renovacion' ) && gv_es_cuota_renovacion( $o ) ) {
+			continue; // Cuota 2, 3...: la plaza ya se contó con la primera.
+		}
 		foreach ( $o->get_items() as $item ) {
 			if ( (int) $item->get_product_id() === (int) $product_id && ! $item->get_meta( '_gv_hermes_booking_id' ) ) {
 				$n += (int) $item->get_quantity();

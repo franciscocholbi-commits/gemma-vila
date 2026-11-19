@@ -94,7 +94,7 @@ function gv_datos_modulo( $nombre ) {
 function gv_datos_ventas() {
 	$cab = array( 'pedido', 'fecha', 'mes', 'estado', 'prueba', 'curso_id', 'curso', 'modulo', 'tipo', 'fecha_edicion',
 		'importe', 'iva', 'devuelto', 'comision_stripe', 'neto_stripe', 'alumno', 'provincia', 'pais',
-		'origen', 'utm_source', 'utm_medium', 'utm_campaign', 'web_procedencia', 'matricula_te' );
+		'origen', 'utm_source', 'utm_medium', 'utm_campaign', 'web_procedencia', 'matricula_te', 'cuota' );
 	$filas = array( $cab );
 
 	$pedidos = wc_get_orders( array(
@@ -120,8 +120,9 @@ function gv_datos_ventas() {
 
 		$hash   = md5( strtolower( trim( (string) $o->get_billing_email() ) ) );
 		$pagado = in_array( $o->get_status(), array( 'processing', 'completed', 'refunded' ), true );
-		$alumno = ! empty( $vistos[ $hash ] ) ? 'repetidor' : 'nuevo';
-		if ( $pagado ) {
+		$es_cuota = function_exists( 'gv_es_cuota_renovacion' ) && gv_es_cuota_renovacion( $o );
+		$alumno = $es_cuota ? 'cuota' : ( ! empty( $vistos[ $hash ] ) ? 'repetidor' : 'nuevo' );
+		if ( $pagado && ! $es_cuota ) {
 			$vistos[ $hash ] = ( $vistos[ $hash ] ?? 0 ) + 1;
 		}
 
@@ -162,6 +163,7 @@ function gv_datos_ventas() {
 			$o->get_meta( '_gv_utm_campaign' ),
 			$o->get_meta( '_gv_origen_web' ),
 			$matricula,
+			function_exists( 'gv_cuota_texto' ) ? gv_cuota_texto( $o ) : 'única',
 		);
 	}
 	return $filas;
@@ -181,9 +183,10 @@ function gv_datos_ediciones() {
 		if ( $o->get_meta( '_gv_pedido_prueba' ) ) {
 			continue;
 		}
+		$es_cuota = function_exists( 'gv_es_cuota_renovacion' ) && gv_es_cuota_renovacion( $o );
 		foreach ( $o->get_items() as $it ) {
 			$id = (int) $it->get_product_id();
-			$ventas[ $id ]['n']   = ( $ventas[ $id ]['n'] ?? 0 ) + (int) $it->get_quantity();
+			$ventas[ $id ]['n']   = ( $ventas[ $id ]['n'] ?? 0 ) + ( $es_cuota ? 0 : (int) $it->get_quantity() ); // Las cuotas 2, 3... no son inscripciones nuevas.
 			$ventas[ $id ]['eur'] = ( $ventas[ $id ]['eur'] ?? 0 ) + (float) $it->get_total() + (float) $it->get_total_tax();
 		}
 	}

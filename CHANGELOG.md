@@ -1,5 +1,11 @@
 # Changelog · plugin gemmavila-academia
 
+## 0.15.0 · 19/11/2026 (solo en pruebas)
+- Pago en cuotas con WooCommerce Subscriptions (planes en cada formación): Módulo 1 en 2 cuotas de 225 €, Módulo 2 en 3 de 210 €, packs en 3 de 333 €, mensuales. La primera al inscribirse; el resto se cobra solo a la tarjeta guardada.
+- `includes/cuotas.php`: enlace de compra en cuotas (`gv_url_cuotas()`, para landings) y shortcode `[gv_boton_cuotas]` para las fichas; la alumna no puede cancelar ni suspender las cuotas desde Mi cuenta (sí cambiar la tarjeta).
+- Plazas y matrículas: las cuotas 2, 3… (pedidos de renovación) no cuentan como plaza nueva ni se envían otra vez a Técnica Estructural.
+- Cuadro de mando: nueva columna `cuota` («única», «1/2», «2/2»…) al final del listado de ventas; las renovaciones salen con alumno = «cuota» y no cuentan como inscripción en el listado de ediciones (sí suman en ingresos).
+
 ## mu-plugin gv-iva-facturas 1.0.0 · 18/11/2026 (producción)
 - Facturas con el sistema interno (PDF Invoices & Packing Slips) en la academia real. Decisión de Francisco: España y UE con 21 % de IVA incluido; fuera de la UE, factura sin IVA por el **mismo importe final** (no el reducido).
 - `academia/mu-plugins/gv-iva-facturas.php`: `woocommerce_adjust_non_base_location_prices` = false (mismo precio en todos los países), la factura PDF muestra base + IVA desglosados (la web sigue mostrando precios con IVA incluido) y una nota de «Operación no sujeta al IVA español» cuando el cliente es de fuera de la UE y el pedido va sin IVA.

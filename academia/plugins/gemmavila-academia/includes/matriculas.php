@@ -57,6 +57,9 @@ function gv_matricula_enviar_pedido( $order_id, $intento = 0 ) {
 	if ( ! $order || ! in_array( $order->get_status(), array( 'processing', 'completed' ), true ) ) {
 		return;
 	}
+	if ( function_exists( 'gv_es_cuota_renovacion' ) && gv_es_cuota_renovacion( $order ) ) {
+		return; // Pago en cuotas: la matrícula se envía una sola vez, con la primera cuota.
+	}
 	$reintentar = false;
 	foreach ( $order->get_items() as $item ) {
 		$pid   = $item->get_product_id();
