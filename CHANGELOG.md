@@ -5,6 +5,7 @@
 - `includes/cuotas.php`: enlace de compra en cuotas (`gv_url_cuotas()`, para landings) y shortcode `[gv_boton_cuotas]` para las fichas; la alumna no puede cancelar ni suspender las cuotas desde Mi cuenta (sí cambiar la tarjeta).
 - Plazas y matrículas: las cuotas 2, 3… (pedidos de renovación) no cuentan como plaza nueva ni se envían otra vez a Técnica Estructural.
 - Cuadro de mando: nueva columna `cuota` («única», «1/2», «2/2»…) al final del listado de ventas; las renovaciones salen con alumno = «cuota» y no cuentan como inscripción en el listado de ediciones (sí suman en ingresos).
+- Traducción al castellano de WooCommerce Subscriptions (482 frases de lo que ve la alumna: correos, pago, Mi cuenta, precios y fechas). «Subscription» se dice «plan de pago» y «renewal», «cuota»; el estado Expired sale como «Pagado» (en las cuotas, terminar el plan significa que está todo pagado). Archivos `wp-content/languages/plugins/woocommerce-subscriptions-es_ES.po/.mo` en pruebas (md5 del .mo d9bee59014093e977153eb98b574eaa3); copia con los JSON de origen en `/home/hosting177539eu/gv-copias/traducciones/` (fuera de las webs). El plugin no tiene traducción oficial y sus actualizaciones no la pisan. Falta copiarla a la academia real con el resto de 0.15.0.
 
 ## mu-plugin gv-iva-facturas 1.0.0 · 18/11/2026 (producción)
 - Facturas con el sistema interno (PDF Invoices & Packing Slips) en la academia real. Decisión de Francisco: España y UE con 21 % de IVA incluido; fuera de la UE, factura sin IVA por el **mismo importe final** (no el reducido).
