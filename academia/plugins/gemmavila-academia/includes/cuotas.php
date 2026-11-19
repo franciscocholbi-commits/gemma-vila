@@ -135,3 +135,95 @@ function gv_cuota_texto( $order ) {
 	}
 	return ( false === $pos ? '?' : $pos + 1 ) . '/' . ( $total ? $total : '?' );
 }
+
+/*
+ * Elegir «pago único» o «en cuotas» en Finalizar compra.
+ * Los botones «Inscribirme» llevan directos al pago (sin carrito) con el pago único, así que la alumna
+ * tiene que poder cambiarlo aquí. Al cambiar la opción se recalcula el pedido (update_checkout).
+ */
+add_action( 'woocommerce_checkout_before_order_review_heading', function () {
+	if ( ! WC()->cart || ! class_exists( 'WCS_ATT_Cart' ) ) {
+		return;
+	}
+	$filas = '';
+	foreach ( WC()->cart->get_cart() as $clave => $item ) {
+		if ( isset( $item['subscription_renewal'] ) || ! isset( $item['wcsatt_data'] ) ) {
+			continue;
+		}
+		$plan = gv_plan_cuotas( $item['product_id'] );
+		if ( ! $plan || $plan['cuotas'] < 2 ) {
+			continue;
+		}
+		$producto = wc_get_product( $item['product_id'] );
+		$activo   = WCS_ATT_Cart::get_subscription_scheme( $item );
+		$nombre   = 'gv_plan[' . esc_attr( $clave ) . ']';
+		$filas   .= '<div class="gv-forma-pago">';
+		if ( WC()->cart->get_cart_contents_count() > 1 ) {
+			$filas .= '<p class="gv-forma-pago__curso">' . esc_html( $producto->get_name() ) . '</p>';
+		}
+		$filas .= sprintf(
+			'<label><input type="radio" name="%1$s" value="unico" %2$s> Pago único de %3$s</label>',
+			$nombre,
+			checked( empty( $activo ), true, false ),
+			esc_html( gv_importe_corto( (float) wc_get_price_to_display( $producto ) ) )
+		);
+		$filas .= sprintf(
+			'<label><input type="radio" name="%1$s" value="%2$s" %3$s> En %4$d cuotas mensuales de %5$s <small>(la primera hoy; las demás se cobran solas a la misma tarjeta)</small></label>',
+			$nombre,
+			esc_attr( $plan['clave'] ),
+			checked( $activo, $plan['clave'], false ),
+			$plan['cuotas'],
+			esc_html( gv_importe_corto( $plan['importe'] ) )
+		);
+		$filas .= '</div>';
+	}
+	if ( ! $filas ) {
+		return;
+	}
+	echo '<div id="gv-formas-pago"><h3>¿Cómo quieres pagar?</h3>' . $filas . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	?>
+	<style>
+		#gv-formas-pago{margin:0 0 1.5em}
+		#gv-formas-pago label{display:block;padding:.75em 1em;margin:0 0 .5em;border:1px solid #ddd;border-radius:6px;cursor:pointer}
+		#gv-formas-pago label:has(input:checked){border-color:currentColor;font-weight:600}
+		#gv-formas-pago small{font-weight:400;opacity:.75}
+		#gv-formas-pago .gv-forma-pago__curso{margin:.5em 0 .25em;font-weight:600}
+	</style>
+	<script>
+		jQuery( function ( $ ) {
+			$( document.body ).on( 'change', '#gv-formas-pago input', function () {
+				$( document.body ).trigger( 'update_checkout' );
+			} );
+		} );
+	</script>
+	<?php
+} );
+
+/** Aplica la opción elegida al recalcular el pedido en Finalizar compra. */
+add_action( 'woocommerce_checkout_update_order_review', function ( $post_data ) {
+	if ( ! WC()->cart || ! class_exists( 'WCS_ATT_Cart' ) ) {
+		return;
+	}
+	parse_str( (string) $post_data, $datos );
+	if ( empty( $datos['gv_plan'] ) || ! is_array( $datos['gv_plan'] ) ) {
+		return;
+	}
+	$cambio = false;
+	foreach ( $datos['gv_plan'] as $clave => $valor ) {
+		$clave = wc_clean( $clave );
+		$item  = WC()->cart->get_cart_item( $clave );
+		if ( ! $item || ! isset( $item['wcsatt_data'] ) || isset( $item['subscription_renewal'] ) ) {
+			continue;
+		}
+		$plan  = gv_plan_cuotas( $item['product_id'] );
+		$nuevo = ( $plan && $valor === $plan['clave'] ) ? $plan['clave'] : false;
+		if ( WCS_ATT_Cart::get_subscription_scheme( $item ) !== $nuevo ) {
+			WC()->cart->cart_contents[ $clave ]['wcsatt_data']['active_subscription_scheme'] = $nuevo;
+			$cambio = true;
+		}
+	}
+	if ( $cambio ) {
+		WCS_ATT_Cart::apply_subscription_schemes( WC()->cart );
+		WC()->cart->set_session();
+	}
+} );
