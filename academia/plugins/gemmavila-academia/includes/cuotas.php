@@ -227,3 +227,15 @@ add_action( 'woocommerce_checkout_update_order_review', function ( $post_data ) 
 		WC()->cart->set_session();
 	}
 } );
+
+/*
+ * En la home, el listado y las fichas solo se ve el precio total (decisión de Francisco, 19/11/2026).
+ * Las cuotas se eligen en Finalizar compra. Quita el «— o 225 € / mes durante 2 meses» que añade el plugin.
+ */
+add_filter( 'woocommerce_get_price_html', function ( $html ) {
+	if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+		return $html;
+	}
+	$pos = strpos( (string) $html, '<small class="wcsatt-sub-options">' );
+	return false === $pos ? $html : rtrim( substr( $html, 0, $pos ) );
+}, 10000 );
