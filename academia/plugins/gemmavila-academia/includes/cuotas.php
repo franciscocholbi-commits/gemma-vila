@@ -239,3 +239,53 @@ add_filter( 'woocommerce_get_price_html', function ( $html ) {
 	$pos = strpos( (string) $html, '<small class="wcsatt-sub-options">' );
 	return false === $pos ? $html : rtrim( substr( $html, 0, $pos ) );
 }, 10000 );
+
+/*
+ * Resumen del pedido en Finalizar compra, en lenguaje de cuotas (decisión de Francisco, 19/11/2026):
+ * - Línea de la formación: «225 € hoy (cuota 1 de 2)» en vez de «225 € / mes durante 2 meses».
+ * - «Cuotas siguientes»: «1 cuota más de 225 € el 19/12/2026» (o «2 cuotas más de 210 €: 19/12/2026 y 19/01/2027»).
+ * - Se ocultan la cabecera y el subtotal repetidos del bloque de cuotas.
+ */
+add_filter( 'woocommerce_cart_item_subtotal', function ( $html, $item ) {
+	if ( ! class_exists( 'WCS_ATT_Cart' ) || isset( $item['subscription_renewal'] ) || ! WCS_ATT_Cart::get_subscription_scheme( $item ) ) {
+		return $html;
+	}
+	$plan = gv_plan_cuotas( $item['product_id'] );
+	if ( ! $plan ) {
+		return $html;
+	}
+	$importe = (float) $item['line_subtotal'] + ( 'incl' === get_option( 'woocommerce_tax_display_cart' ) ? (float) $item['line_subtotal_tax'] : 0 );
+	return wc_price( $importe ) . sprintf( ' <small>hoy (cuota 1 de %d)</small>', $plan['cuotas'] );
+}, 10000, 2 );
+
+add_filter( 'wcs_cart_totals_order_total_html', function ( $html, $cart ) {
+	if ( empty( $cart->next_payment_date ) ) {
+		return $html;
+	}
+	$plan = null;
+	foreach ( $cart->get_cart() as $item ) {
+		$plan = gv_plan_cuotas( $item['product_id'] );
+		break;
+	}
+	if ( ! $plan || $plan['cuotas'] < 2 ) {
+		return $html;
+	}
+	$quedan = $plan['cuotas'] - 1;
+	$fechas = array();
+	$inicio = wcs_date_to_time( get_date_from_gmt( $cart->next_payment_date ) );
+	for ( $i = 0; $i < $quedan; $i++ ) {
+		$fechas[] = date_i18n( wc_date_format(), strtotime( '+' . $i . ' month', $inicio ) );
+	}
+	$importe = wc_price( (float) $cart->get_total( 'edit' ) );
+	if ( 1 === $quedan ) {
+		return sprintf( '1 cuota más de %s el %s', $importe, $fechas[0] );
+	}
+	$ultima = array_pop( $fechas );
+	return sprintf( '%d cuotas más de %s: %s y %s', $quedan, $importe, implode( ', ', $fechas ), $ultima );
+}, 20, 2 );
+
+add_action( 'wp_head', function () {
+	if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+		echo '<style>#order_review tr.recurring-totals,#order_review tr.cart-subtotal.recurring-total{display:none}</style>';
+	}
+} );
