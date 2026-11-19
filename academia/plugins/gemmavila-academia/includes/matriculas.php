@@ -12,6 +12,10 @@
  *
  * Seguridad en el entorno de pruebas: si wp-config define GV_HERMES_EVENTOS_PERMITIDOS
  * (p. ej. '1052'), solo se envían esos eventos; el resto se salta con una nota.
+ *
+ * Interruptor: el envío solo funciona si la opción gv_matriculas_activas vale «yes»
+ * (wp option update gv_matriculas_activas yes). En la academia real está apagado hasta que
+ * David (Técnica Estructural) dé el visto bueno; en pruebas, encendido.
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -129,6 +133,10 @@ function gv_matricula_enviar_pedido( $order_id, $intento = 0 ) {
 		}
 	}
 }
+if ( 'yes' !== get_option( 'gv_matriculas_activas', 'no' ) ) {
+	return; // Envío apagado en esta instalación: ni automático ni botón manual.
+}
+
 add_action( GV_MATRICULA_HOOK, 'gv_matricula_enviar_pedido', 10, 2 );
 
 // Al quedar pagado el pedido.
